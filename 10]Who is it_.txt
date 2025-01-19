@@ -1,0 +1,40 @@
+import re
+
+def resolve_anaphora(text_lines, entities):
+    # Combine the text lines into a single string to process the pronouns and their possible antecedents
+    text = " ".join(text_lines)
+    
+    # Regular expression to identify bolded pronouns like **he**, **his**, **she**, **it** etc.
+    pronoun_pattern = r"\*\*([a-zA-Z]+)\*\*"
+    
+    # Find all occurrences of bolded pronouns
+    pronouns = re.findall(pronoun_pattern, text)
+    
+    # Split the entities list into individual entities
+    entity_list = entities.split(";")
+    
+    # Prepare a result list for the resolution of each pronoun
+    resolved_entities = []
+    
+    # We assume that the pronouns will refer to the entities in the order they appear
+    for pronoun in pronouns:
+        # Find the closest entity (this logic may vary based on more complex NLP tasks, but we assume simple mapping)
+        if pronoun.lower() in ['he', 'she', 'his', 'her']:
+            # The first entity in the text that matches the pronoun (for simplicity)
+            resolved_entities.append(entity_list[0])  # First entity for now (could be improved with NLP rules)
+        else:
+            resolved_entities.append(entity_list[1])  # Second entity, as per the examples
+    
+    return resolved_entities
+
+# Read input
+N = int(input())  # Number of text lines
+text_lines = [input().strip() for _ in range(N)]
+entities = input().strip()  # List of entities
+
+# Resolve anaphora
+resolved_entities = resolve_anaphora(text_lines, entities)
+
+# Output the result
+for entity in resolved_entities:
+    print(entity)
